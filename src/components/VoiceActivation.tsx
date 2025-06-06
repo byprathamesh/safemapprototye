@@ -12,8 +12,15 @@ interface VoiceActivationProps {
   onEmergencyTrigger: () => void;
 }
 
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTrigger }: VoiceActivationProps) => {
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const [recognition, setRecognition] = useState<any>(null);
   const [isSupported, setIsSupported] = useState(false);
   const { toast } = useToast();
 
@@ -47,7 +54,7 @@ const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTri
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
       
       recognitionInstance.continuous = true;
@@ -107,60 +114,98 @@ const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTri
   };
 
   return (
-    <Card className={`transition-all duration-500 border-2 ${
+    <Card className={`group transition-all duration-300 ${
       isListening 
-        ? 'border-red-500 bg-red-50 shadow-xl animate-pulse' 
-        : 'border-gray-300 bg-white hover:border-gray-400'
+        ? 'border-destructive bg-destructive/5 shadow-lg ring-2 ring-destructive/20' 
+        : 'border-border bg-card hover:shadow-md'
     }`}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Volume2 className="h-5 w-5 text-gray-700" />
-            <span className="text-gray-900">{t.title}</span>
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center justify-between text-lg font-semibold">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg transition-colors ${
+              isListening ? 'bg-destructive/10' : 'bg-muted'
+            }`}>
+              <Volume2 className={`h-5 w-5 ${
+                isListening ? 'text-destructive' : 'text-muted-foreground'
+              }`} />
+            </div>
+            <span className="text-foreground">{t.title}</span>
           </div>
           {isListening && (
-            <div className="flex items-center space-x-2 animate-bounce">
-              <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-red-600 font-bold">ACTIVE</span>
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 bg-destructive rounded-full animate-pulse"></div>
+              <span className="text-xs font-bold text-destructive uppercase tracking-wider">
+                ACTIVE
+              </span>
             </div>
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <Button
-            onClick={toggleListening}
-            className={`w-full transition-all duration-300 transform hover:scale-105 ${
-              isListening 
-                ? 'bg-red-600 hover:bg-red-700 text-white border-red-700 animate-pulse' 
-                : 'bg-black hover:bg-gray-800 text-white border-black'
-            }`}
-            size="lg"
-          >
-            {isListening ? <MicOff className="h-4 w-4 mr-2" /> : <Mic className="h-4 w-4 mr-2" />}
+      <CardContent className="space-y-4">
+        <Button
+          onClick={toggleListening}
+          className={`w-full h-12 font-medium transition-all duration-200 ${
+            isListening 
+              ? 'bg-destructive hover:bg-destructive/90 text-destructive-foreground' 
+              : 'bg-primary hover:bg-primary/90 text-primary-foreground'
+          }`}
+          size="lg"
+        >
+          <div className="flex items-center gap-2">
+            {isListening ? (
+              <MicOff className="h-4 w-4" />
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
             {isListening ? t.stopListening : t.startListening}
-          </Button>
+          </div>
+        </Button>
 
-          {isListening && (
-            <div className="bg-red-100 border-2 border-red-300 p-4 rounded-lg animate-fade-in">
-              <p className="text-sm font-bold text-red-800 mb-3">{t.listening}</p>
-              <div className="flex items-center space-x-3">
-                <div className="flex space-x-1">
-                  <div className="h-3 w-3 bg-red-500 rounded-full animate-bounce"></div>
-                  <div className="h-3 w-3 bg-red-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="h-3 w-3 bg-red-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                </div>
-                <span className="text-sm text-red-700 font-medium">Listening...</span>
+        {isListening && (
+          <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-4 animate-fade-in">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="flex gap-1">
+                {[0, 1, 2].map((i) => (
+                  <div 
+                    key={i}
+                    className="h-2 w-2 bg-destructive rounded-full animate-bounce"
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  />
+                ))}
               </div>
+              <span className="text-sm font-medium text-destructive">
+                {t.listening}
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div className="bg-muted/50 border border-border rounded-lg p-4">
+          <h4 className="text-sm font-semibold text-foreground mb-2">
+            Emergency Phrases:
+          </h4>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {t.phrases}
+          </p>
+          {!isSupported && (
+            <div className="mt-3 p-2 bg-destructive/10 border border-destructive/20 rounded text-xs text-destructive">
+              {t.notSupported}
             </div>
           )}
+        </div>
 
-          <div className="bg-gray-100 p-4 rounded-lg border">
-            <h4 className="text-sm font-bold text-gray-900 mb-2">Emergency Phrases:</h4>
-            <p className="text-xs text-gray-700">{t.phrases}</p>
-            {!isSupported && (
-              <p className="text-xs text-red-600 mt-2 font-medium">{t.notSupported}</p>
-            )}
+        <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <div className={`h-1.5 w-1.5 rounded-full ${
+              isSupported ? 'bg-green-500' : 'bg-destructive'
+            }`} />
+            <span>{isSupported ? 'Ready' : 'Unsupported'}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className={`h-1.5 w-1.5 rounded-full ${
+              isListening ? 'bg-destructive animate-pulse' : 'bg-muted-foreground'
+            }`} />
+            <span>{isListening ? 'Listening' : 'Idle'}</span>
           </div>
         </div>
       </CardContent>
