@@ -1,0 +1,29 @@
+{
+  "name": "Safe Map - Women's Safety App",
+  "short_name": "Safe Map",
+  "description": "Industry-grade women's safety mobile app for India with emergency features, live location sharing, and safety heatmaps.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["safety", "utilities", "lifestyle"],
+  "lang": "en-IN"
+} 

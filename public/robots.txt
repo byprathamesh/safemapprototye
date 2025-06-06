@@ -1,8 +1,17 @@
+User-agent: *
+Allow: /
+Disallow: /admin*
+Disallow: /api*
+Crawl-delay: 1
+
+# Search Engine Specific
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Twitterbot
 Allow: /
@@ -10,5 +19,8 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Safe Map - Women's Safety App
+# Your Safety, Our Priority
