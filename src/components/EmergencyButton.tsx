@@ -21,9 +21,9 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
       emergency: "EMERGENCY",
       help: "PRESS & HOLD FOR HELP",
       activated: "EMERGENCY ACTIVATED",
-      calling: "🚨 Emergency Services Contacted",
-      locationShared: "📍 Location shared with 5 trusted contacts",
-      recording: "🎥 Evidence recording started",
+      calling: "Emergency Services Contacted",
+      locationShared: "Location shared with trusted contacts",
+      recording: "Evidence recording started",
       cancel: "Cancel Emergency",
       confirm: "Confirm Emergency",
       release: "Release to cancel",
@@ -33,9 +33,9 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
       emergency: "आपातकाल",
       help: "मदद के लिए दबाकर रखें",
       activated: "आपातकाल सक्रिय",
-      calling: "🚨 आपातकालीन सेवाओं से संपर्क",
-      locationShared: "📍 5 विश्वसनीय संपर्कों के साथ स्थान साझा",
-      recording: "🎥 प्रमाण रिकॉर्डिंग शुरू",
+      calling: "आपातकालीन सेवाओं से संपर्क",
+      locationShared: "विश्वसनीय संपर्कों के साथ स्थान साझा",
+      recording: "प्रमाण रिकॉर्डिंग शुरू",
       cancel: "आपातकाल रद्द करें",
       confirm: "आपातकाल की पुष्टि करें",
       release: "रद्द करने के लिए छोड़ें",
@@ -61,21 +61,16 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
   const activateEmergency = () => {
     setIsEmergencyMode(true);
     
-    // Enhanced emergency activation with multiple actions
-    console.log('🚨 EMERGENCY ACTIVATED');
-    console.log('📍 Location:', userLocation);
-    console.log('📞 Calling emergency services...');
-    console.log('📲 Sending alerts to trusted contacts...');
-    console.log('🎥 Starting emergency recording...');
-    console.log('🔊 Playing emergency sound...');
-    console.log('📡 Sending location to authorities...');
+    console.log('EMERGENCY ACTIVATED');
+    console.log('Location:', userLocation);
+    console.log('Calling emergency services...');
+    console.log('Sending alerts to trusted contacts...');
+    console.log('Starting emergency recording...');
 
-    // Enhanced haptic feedback
     if (navigator.vibrate) {
       navigator.vibrate([200, 100, 200, 100, 200, 100, 1000]);
     }
 
-    // Multiple toast notifications for emergency actions
     toast({
       title: t.activated,
       description: t.calling,
@@ -138,32 +133,35 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
   if (isEmergencyMode) {
     return (
       <div className="text-center space-y-6">
-        {/* Emergency Active State */}
         <div className="relative">
           <div className="absolute -inset-8 bg-red-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
-          <div className="relative bg-gradient-to-r from-red-600 to-red-700 text-white p-8 rounded-3xl shadow-2xl border-4 border-red-400">
+          <div className="relative bg-gradient-to-br from-red-600 to-red-800 text-white p-8 rounded-2xl shadow-2xl border-4 border-red-400">
             <div className="space-y-4">
-              <div className="flex items-center justify-center space-x-3">
-                <AlertTriangle className="h-12 w-12 animate-bounce" />
-                <div className="text-center">
-                  <div className="text-3xl font-bold">{t.activated}</div>
-                  <div className="text-red-200 text-lg">Emergency Mode Active</div>
+              <div className="flex items-center justify-center space-x-4">
+                <div className="bg-red-500 rounded-full p-3">
+                  <AlertTriangle className="h-8 w-8 animate-pulse" />
                 </div>
-                <AlertTriangle className="h-12 w-12 animate-bounce" />
+                <div className="text-center">
+                  <div className="text-3xl font-black">{t.activated}</div>
+                  <div className="text-red-200 text-lg font-semibold">Emergency Mode Active</div>
+                </div>
+                <div className="bg-red-500 rounded-full p-3">
+                  <AlertTriangle className="h-8 w-8 animate-pulse" />
+                </div>
               </div>
               
-              <div className="grid grid-cols-1 gap-2 text-sm">
-                <div className="flex items-center justify-center space-x-2 bg-red-500 bg-opacity-50 rounded p-2">
-                  <Phone className="h-4 w-4" />
-                  <span>{t.calling}</span>
+              <div className="grid grid-cols-1 gap-3 text-sm">
+                <div className="flex items-center justify-center space-x-3 bg-red-700/50 rounded-lg p-3 border border-red-500">
+                  <Phone className="h-5 w-5" />
+                  <span className="font-medium">{t.calling}</span>
                 </div>
-                <div className="flex items-center justify-center space-x-2 bg-red-500 bg-opacity-50 rounded p-2">
-                  <Shield className="h-4 w-4" />
-                  <span>{t.locationShared}</span>
+                <div className="flex items-center justify-center space-x-3 bg-red-700/50 rounded-lg p-3 border border-red-500">
+                  <Shield className="h-5 w-5" />
+                  <span className="font-medium">{t.locationShared}</span>
                 </div>
-                <div className="flex items-center justify-center space-x-2 bg-red-500 bg-opacity-50 rounded p-2">
-                  <Zap className="h-4 w-4" />
-                  <span>{t.recording}</span>
+                <div className="flex items-center justify-center space-x-3 bg-red-700/50 rounded-lg p-3 border border-red-500">
+                  <Zap className="h-5 w-5" />
+                  <span className="font-medium">{t.recording}</span>
                 </div>
               </div>
             </div>
@@ -174,7 +172,7 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
           onClick={handleClick}
           variant="outline"
           size="lg"
-          className="bg-white text-red-600 hover:bg-red-50 border-2 border-red-600 font-semibold"
+          className="bg-white text-red-600 hover:bg-red-50 border-2 border-red-600 font-semibold px-8 py-3"
         >
           {t.cancel}
         </Button>
@@ -184,13 +182,10 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
 
   return (
     <div className="text-center space-y-6">
-      {/* Main Emergency Button */}
       <div className="relative">
-        {/* Outer glow rings */}
-        <div className="absolute -inset-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full blur opacity-30 animate-pulse"></div>
-        <div className="absolute -inset-2 bg-red-400 rounded-full opacity-20 animate-ping"></div>
+        <div className="absolute -inset-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full blur opacity-20"></div>
+        <div className="absolute -inset-3 bg-red-400 rounded-full opacity-10"></div>
         
-        {/* Main button */}
         <Button
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
@@ -198,10 +193,10 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
           onTouchEnd={handleMouseUp}
           className={`
             relative h-40 w-40 rounded-full text-white font-bold text-lg
-            transition-all duration-200 transform hover:scale-105 active:scale-95
+            transition-all duration-300 transform hover:scale-105 active:scale-95
             ${countdown !== null 
-              ? 'bg-gradient-to-r from-red-700 to-red-800 border-4 border-red-400 animate-pulse shadow-2xl shadow-red-500/50' 
-              : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 border-4 border-red-500 shadow-2xl hover:shadow-red-500/50'
+              ? 'bg-gradient-to-br from-red-700 to-red-900 border-4 border-red-400 animate-pulse shadow-2xl' 
+              : 'bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 border-4 border-red-500 shadow-2xl'
             }
           `}
           size="lg"
@@ -209,20 +204,19 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
           <div className="text-center space-y-2">
             {countdown !== null ? (
               <>
-                <div className="text-4xl font-bold">{countdown}</div>
-                <div className="text-sm">{t.release}</div>
+                <div className="text-4xl font-black">{countdown}</div>
+                <div className="text-sm font-semibold">{t.release}</div>
               </>
             ) : (
               <>
                 <AlertTriangle className="h-12 w-12 mx-auto mb-2" />
-                <div className="text-xl font-bold">{t.emergency}</div>
-                <div className="text-xs leading-tight">{t.help}</div>
+                <div className="text-xl font-black">{t.emergency}</div>
+                <div className="text-xs font-medium leading-tight">{t.help}</div>
               </>
             )}
           </div>
         </Button>
         
-        {/* Countdown rings */}
         {countdown !== null && (
           <>
             <div className="absolute inset-0 rounded-full border-4 border-red-300 animate-ping"></div>
@@ -231,10 +225,9 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
         )}
       </div>
       
-      {/* Instructions */}
       <div className="space-y-3">
-        <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-4 max-w-md mx-auto">
-          <div className="text-gray-800 font-medium mb-2">Emergency Activation Methods:</div>
+        <div className="bg-gray-100 border border-gray-300 rounded-lg p-4 max-w-md mx-auto">
+          <div className="text-gray-800 font-bold mb-2">Emergency Activation Methods:</div>
           <div className="text-sm text-gray-600 space-y-1">
             <div>• Press & hold button for 3 seconds</div>
             <div>• Voice command: "Help me" / "मुझे मदद चाहिए"</div>
@@ -243,17 +236,17 @@ const EmergencyButton = ({ isEmergencyMode, setIsEmergencyMode, userLocation, la
           </div>
         </div>
         
-        <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
-          <div className="flex items-center space-x-1">
-            <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+        <div className="flex items-center justify-center space-x-6 text-xs text-gray-500">
+          <div className="flex items-center space-x-2">
+            <div className="h-2 w-2 bg-green-500 rounded-full"></div>
             <span>GPS Ready</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
+          <div className="flex items-center space-x-2">
+            <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
             <span>Contacts Ready</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <div className="h-2 w-2 bg-purple-500 rounded-full animate-pulse"></div>
+          <div className="flex items-center space-x-2">
+            <div className="h-2 w-2 bg-gray-700 rounded-full"></div>
             <span>Recording Ready</span>
           </div>
         </div>
