@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Mic, MicOff, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import '@/types/speech';
 
 interface VoiceActivationProps {
   isListening: boolean;
@@ -47,14 +48,14 @@ const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTri
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
       
       recognitionInstance.continuous = true;
       recognitionInstance.interimResults = true;
       recognitionInstance.lang = language === 'hi' ? 'hi-IN' : 'en-US';
 
-      recognitionInstance.onresult = (event) => {
+      recognitionInstance.onresult = (event: any) => {
         const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
         console.log('Voice input:', transcript);
 
@@ -72,7 +73,7 @@ const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTri
         }
       };
 
-      recognitionInstance.onerror = (event) => {
+      recognitionInstance.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setIsListening(false);
       };
@@ -107,15 +108,21 @@ const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTri
   };
 
   return (
-    <Card className={`transition-all duration-300 ${isListening ? 'border-blue-500 bg-blue-50 shadow-lg' : ''}`}>
-      <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <Volume2 className="h-5 w-5" />
-          <span>{t.title}</span>
+    <Card className={`transition-all duration-500 border-2 ${
+      isListening 
+        ? 'border-red-500 bg-red-50 shadow-xl animate-pulse' 
+        : 'border-gray-300 bg-white hover:border-gray-400'
+    }`}>
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Volume2 className="h-5 w-5 text-gray-700" />
+            <span className="text-gray-900">{t.title}</span>
+          </div>
           {isListening && (
-            <div className="flex items-center space-x-1">
-              <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-blue-600">Active</span>
+            <div className="flex items-center space-x-2 animate-bounce">
+              <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-xs text-red-600 font-bold">ACTIVE</span>
             </div>
           )}
         </CardTitle>
@@ -124,9 +131,10 @@ const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTri
         <div className="space-y-4">
           <Button
             onClick={toggleListening}
-            className={`w-full ${isListening 
-              ? 'bg-red-600 hover:bg-red-700 text-white' 
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
+            className={`w-full transition-all duration-300 transform hover:scale-105 ${
+              isListening 
+                ? 'bg-red-600 hover:bg-red-700 text-white border-red-700 animate-pulse' 
+                : 'bg-black hover:bg-gray-800 text-white border-black'
             }`}
             size="lg"
           >
@@ -135,24 +143,24 @@ const VoiceActivation = ({ isListening, setIsListening, language, onEmergencyTri
           </Button>
 
           {isListening && (
-            <div className="bg-blue-100 border border-blue-200 p-3 rounded-lg">
-              <p className="text-sm font-medium text-blue-800 mb-2">{t.listening}</p>
-              <div className="flex items-center space-x-2">
+            <div className="bg-red-100 border-2 border-red-300 p-4 rounded-lg animate-fade-in">
+              <p className="text-sm font-bold text-red-800 mb-3">{t.listening}</p>
+              <div className="flex items-center space-x-3">
                 <div className="flex space-x-1">
-                  <div className="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
-                  <div className="h-2 w-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="h-2 w-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  <div className="h-3 w-3 bg-red-500 rounded-full animate-bounce"></div>
+                  <div className="h-3 w-3 bg-red-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="h-3 w-3 bg-red-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                 </div>
-                <span className="text-xs text-blue-600">Listening...</span>
+                <span className="text-sm text-red-700 font-medium">Listening...</span>
               </div>
             </div>
           )}
 
-          <div className="bg-gray-100 p-3 rounded-lg">
-            <h4 className="text-sm font-medium text-gray-800 mb-2">Emergency Phrases:</h4>
-            <p className="text-xs text-gray-600">{t.phrases}</p>
+          <div className="bg-gray-100 p-4 rounded-lg border">
+            <h4 className="text-sm font-bold text-gray-900 mb-2">Emergency Phrases:</h4>
+            <p className="text-xs text-gray-700">{t.phrases}</p>
             {!isSupported && (
-              <p className="text-xs text-red-600 mt-2">{t.notSupported}</p>
+              <p className="text-xs text-red-600 mt-2 font-medium">{t.notSupported}</p>
             )}
           </div>
         </div>
